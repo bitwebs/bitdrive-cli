@@ -1,9 +1,9 @@
 const p = require('path').posix
 const { flags } = require('@oclif/command')
 
-const HyperdriveServiceCommand = require('../../lib/cli')
+const BitdriveServiceCommand = require('../../lib/cli')
 
-class InfoCommand extends HyperdriveServiceCommand {
+class InfoCommand extends BitdriveServiceCommand {
   static usage = 'info [path]'
   static description = 'Display information about the drive mounted at the given mountpoint.'
   static args = [

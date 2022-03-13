@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const hyperfuse = require('hyperdrive-fuse')
+const bitfuse = require('@web4/bitdrive-fuse')
 
-hyperfuse.configure(err => {
+bitfuse.configure(err => {
   if (err) return process.exit(1)
   return process.exit(0)
 })

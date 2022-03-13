@@ -1,22 +1,22 @@
 const p = require('path')
 const { Command, flags } = require('@oclif/command')
 
-const HyperdriveService = require('../..')
-const HyperdriveServiceCommand = require('../../lib/cli')
+const BitdriveService = require('../..')
+const BitdriveServiceCommand = require('../../lib/cli')
 
 class StartCommand extends Command {
   static usage = 'start'
-  static description = 'Start the Hyperdrive service.'
+  static description = 'Start the Bitdrive service.'
   static flags = {
     'disable-fuse': flags.boolean({
       description: 'Disable FUSE mounting.',
       default: false
     }),
     host: flags.string({
-      description: 'The Hyperspace service host.',
+      description: 'The Bitspace service host.',
       required: false
     }),
-    key: HyperdriveServiceCommand.keyFlag({
+    key: BitdriveServiceCommand.keyFlag({
       description: 'The root drive key.',
       required: false
     }),
@@ -30,7 +30,7 @@ class StartCommand extends Command {
     const { flags } = this.parse(StartCommand)
     flags.disableFuse = flags['disable-fuse']
     if (flags.mnt) flags.mnt = p.resolve(flags.mnt)
-    const service = new HyperdriveService({
+    const service = new BitdriveService({
       ...flags
     })
     process.on('SIGINT', () => {
@@ -41,9 +41,9 @@ class StartCommand extends Command {
     })
     try {
       await service.open()
-      console.log('Hyperdrive service is running (Ctrl+c to stop)...')
+      console.log('Bitdrive service is running (Ctrl+c to stop)...')
     } catch (err) {
-      console.error('Could not start the Hyperdrive service. Is Hyperspace running?')
+      console.error('Could not start the Bitdrive service. Is Bitspace running?')
       console.error('Error:', err)
     }
   }

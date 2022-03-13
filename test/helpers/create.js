@@ -1,13 +1,13 @@
 const tmp = require('tmp-promise')
-const { createMany: hsCreate } = require('hyperspace/test/helpers/create')
+const { createMany: bsCreate } = require('bitspace/test/helpers/create')
 
-const HyperdriveService = require('../..')
-const HyperdriveServiceClient = require('../../client')
+const BitdriveService = require('../..')
+const BitdriveServiceClient = require('../../client')
 
 async function create (numMounts, opts = {}) {
-  const { clients, cleanup: hsCleanup } = await hsCreate(numMounts, {
+  const { clients, cleanup: bsCleanup } = await bsCreate(numMounts, {
     ...opts,
-    host: 'hyperspace-fuse'
+    host: '@web4/bitspace-fuse'
   })
   const fuseMnts = []
   const fuseServices = []
@@ -15,18 +15,18 @@ async function create (numMounts, opts = {}) {
 
   for (let i = 0; i < numMounts; i++) {
     const fuseMnt = await tmp.dir({ unsafeCleanup: true })
-    const store = clients[i].corestore()
-    const rootDriveCore = store.get()
-    await rootDriveCore.ready()
-    const fuseService = new HyperdriveService({
-      key: rootDriveCore.key,
+    const store = clients[i].chainstore()
+    const rootDriveChain = store.get()
+    await rootDriveChain.ready()
+    const fuseService = new BitdriveService({
+      key: rootDriveChain.key,
       mnt: fuseMnt.path,
       client: clients[i],
       remember: false
     })
     await fuseService.open()
-    const fuseClient = new HyperdriveServiceClient({
-      key: rootDriveCore.key,
+    const fuseClient = new BitdriveServiceClient({
+      key: rootDriveChain.key,
       mnt: fuseMnt.path,
       client: clients[i]
     })
@@ -39,7 +39,7 @@ async function create (numMounts, opts = {}) {
   return { fuseServices, fuseClients, fuseMnts, cleanup }
 
   async function cleanup () {
-    await hsCleanup()
+    await bsCleanup()
     for (const service of fuseServices) {
       await service.close()
     }

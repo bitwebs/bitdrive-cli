@@ -3,11 +3,11 @@ const p = require('path')
 const cliProgress = require('cli-progress')
 const { flags } = require('@oclif/command')
 
-const HyperdriveServiceCommand = require('../../lib/cli')
+const BitdriveServiceCommand = require('../../lib/cli')
 
-class ImportCommand extends HyperdriveServiceCommand {
+class ImportCommand extends BitdriveServiceCommand {
   static usage = 'import [dir] [key]'
-  static description = 'Import a directory into a Hyperdrive.'
+  static description = 'Import a directory into a Bitdrive.'
   static args = [
     {
       name: 'dir',
@@ -18,14 +18,14 @@ class ImportCommand extends HyperdriveServiceCommand {
         return p.resolve(dir)
       }
     },
-    HyperdriveServiceCommand.keyArg({
+    BitdriveServiceCommand.keyArg({
       description: 'The drive key.',
       required: false
     })
   ]
   static flags = {
     'no-seed': flags.boolean({
-      description: 'Do not seed the new drive on the Hyperdrive network',
+      description: 'Do not seed the new drive on the Bitdrive network',
       default: false
     }),
     'watch': flags.boolean({

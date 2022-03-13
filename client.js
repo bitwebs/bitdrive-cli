@@ -1,18 +1,18 @@
 const p = require('path')
 const isOptions = require('is-options')
-const hyperdrive = require('hyperdrive')
-const HyperspaceClient = require('hyperspace/client')
+const bitdrive = require('@web4/bitdrive')
+const BitspaceClient = require('bitspace/client')
 
 const { loadConfig } = require('./lib/config')
 const importDirectory = require('./lib/cli/import')
 const exportDrive = require('./lib/cli/export')
 
-module.exports = class HyperdriveServiceClient {
+module.exports = class BitdriveServiceClient {
   constructor (opts = {}) {
     this.key = opts.key
     this.mnt = opts.mnt
 
-    this.hyperspaceClient = opts.client || new HyperspaceClient(opts)
+    this.bitspaceClient = opts.client || new BitspaceClient(opts)
     this._store = null
     this._rootDrive = null
   }
@@ -24,9 +24,9 @@ module.exports = class HyperdriveServiceClient {
       if (config.rootDriveKey) this.key = Buffer.from(config.rootDriveKey, 'hex')
       if (config.mnt) this.mnt = config.mnt
     }
-    if (!this.key) throw new Error('HyperdriveServiceClient was not given a root drive key.')
-    if (!this.mnt) throw new Error('HyperdriveServiceClient was not given a root mountpoint.')
-    this._store = this.hyperspaceClient.corestore()
+    if (!this.key) throw new Error('BitdriveServiceClient was not given a root drive key.')
+    if (!this.mnt) throw new Error('BitdriveServiceClient was not given a root mountpoint.')
+    this._store = this.bitspaceClient.chainstore()
     this._rootDrive = await this._createDrive({ key: this.key })
   }
 
@@ -37,7 +37,7 @@ module.exports = class HyperdriveServiceClient {
   }
 
   async _createDrive (opts = {}) {
-    var drive = hyperdrive(this._store, opts && opts.key, {
+    var drive = bitdrive(this._store, opts && opts.key, {
       ...opts,
       extension: false
     }).promises
@@ -65,7 +65,7 @@ module.exports = class HyperdriveServiceClient {
       this._rootDrive.drive.stat(noopPath, { trie: true }, (err, stat, trie, _, __, mountPath) => {
         if (err && err.errno !== 2) return reject(err)
         if (err && !trie) return resolve(null)
-        this.hyperspaceClient.network.status(trie.feed.discoveryKey, (err, networkConfig) => {
+        this.bitspaceClient.network.status(trie.feed.discoveryKey, (err, networkConfig) => {
           if (err) return reject(err)
           return resolve({
             key: trie.key,
@@ -103,8 +103,8 @@ module.exports = class HyperdriveServiceClient {
     const network = {}
     for (const [mountpoint, { metadata, content }] of allMounts) {
       network[mountpoint] = {
-        metadata: coreStats(metadata),
-        content: coreStats(content)
+        metadata: chainStats(metadata),
+        content: chainStats(content)
       }
     }
 
@@ -122,14 +122,14 @@ module.exports = class HyperdriveServiceClient {
       network
     }
 
-    function coreStats (core) {
+    function chainStats (chain) {
       return {
-        key: core.key.toString('hex'),
-        discoveryKey: core.discoveryKey.toString('hex'),
-        writable: core.writable,
-        length: core.length,
-        byteLength: core.byteLength,
-        peers: core.peers.map(mapPeer)
+        key: chain.key.toString('hex'),
+        discoveryKey: chain.discoveryKey.toString('hex'),
+        writable: chain.writable,
+        length: chain.length,
+        byteLength: chain.byteLength,
+        peers: chain.peers.map(mapPeer)
       }
     }
 
@@ -153,7 +153,7 @@ module.exports = class HyperdriveServiceClient {
       discoveryKey = drive.discoveryKey
       await drive.close()
     }
-    return this.hyperspaceClient.network.configure(discoveryKey, { ...opts, announce: true, lookup: true })
+    return this.bitspaceClient.network.configure(discoveryKey, { ...opts, announce: true, lookup: true })
   }
 
   async unseed (path, opts = {}) {
@@ -168,7 +168,7 @@ module.exports = class HyperdriveServiceClient {
       discoveryKey = drive.discoveryKey
       await drive.close()
     }
-    return this.hyperspaceClient.network.configure(discoveryKey, { ...opts, announce: false, lookup: false })
+    return this.bitspaceClient.network.configure(discoveryKey, { ...opts, announce: false, lookup: false })
   }
 
   async import (key, dir, opts) {

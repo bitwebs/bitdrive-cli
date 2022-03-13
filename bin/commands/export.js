@@ -3,13 +3,13 @@ const p = require('path')
 const cliProgress = require('cli-progress')
 const { flags } = require('@oclif/command')
 
-const HyperdriveServiceCommand = require('../../lib/cli')
+const BitdriveServiceCommand = require('../../lib/cli')
 
-class ExportCommand extends HyperdriveServiceCommand {
+class ExportCommand extends BitdriveServiceCommand {
   static usage = 'export [key] [dir]'
-  static description = 'Export a Hyperdrive into a directory.'
+  static description = 'Export a Bitdrive into a directory.'
   static args = [
-    HyperdriveServiceCommand.keyArg({
+    BitdriveServiceCommand.keyArg({
       description: 'The drive key.',
       required: false
     }),

@@ -1,10 +1,10 @@
 {
-  "name": "@hyperspace/hyperdrive",
-  "version": "1.0.10",
-  "description": "A Hyperspace service that for managing Hyperdrives over FUSE.",
+  "name": "bitdrive-cli",
+  "version": "1.0.0",
+  "description": "A Bitspace service that for managing Bitdrives over FUSE.",
   "main": "index.js",
   "bin": {
-    "hyperdrive": "./bin/run/run"
+    "bitdrive": "./bin/run/run"
   },
   "files": [
     "index.js",
@@ -17,6 +17,11 @@
     "test": "test"
   },
   "dependencies": {
+    "@web4/bitdrive": "^1.0.0",
+    "@web4/bitdrive-network-heuristics": "^1.0.0",
+    "@web4/bitdrive-schemas": "^1.0.0",
+    "@web4/bitspace": "^1.0.0",
+    "@web4/bitweb-crypto": "^2.0.0",
     "@oclif/command": "^1.6.1",
     "@oclif/config": "^1.15.1",
     "@oclif/errors": "^1.2.2",
@@ -26,11 +31,6 @@
     "cli-progress": "^3.8.2",
     "codecs": "^2.1.0",
     "globby": "^11.0.1",
-    "hypercore-crypto": "^2.1.0",
-    "hyperdrive": "^10.15.1",
-    "hyperdrive-network-heuristics": "^1.0.2",
-    "hyperdrive-schemas": "^2.0.0",
-    "hyperspace": "^3.6.0",
     "is-options": "^1.0.1",
     "mirror-folder": "^3.1.0",
     "nanoresource-promise": "^1.2.2",
@@ -39,7 +39,7 @@
     "tape": "^5.0.1"
   },
   "optionalDependencies": {
-    "hyperdrive-fuse": "^1.2.15",
+    "@web4/bitdrive-fuse": "^1.0.0",
     "fuse-native": "^2.2.6"
   },
   "devDependencies": {
@@ -51,22 +51,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hyperspace-org/hyperdrive.git"
+    "url": "git+https://github.com/bitwebs/bitdrive-cli.git"
   },
   "keywords": [
-    "hyperspace",
-    "hyperdrive",
+    "bitspace",
+    "bitdrive",
     "fuse"
   ],
   "author": "Andrew Osheroff <andrewosh@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hyperspace-org/hyperdrive/issues"
+    "url": "https://github.com/bitwebs/bitdrive-cli/issues"
   },
-  "homepage": "https://github.com/hyperspace-org/hyperdrive#readme",
+  "homepage": "https://github.com/bitwebs/bitdrive-cli#readme",
   "oclif": {
     "commands": "./bin/commands",
-    "bin": "hyperdrive",
+    "bin": "bitdrive",
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-autocomplete"

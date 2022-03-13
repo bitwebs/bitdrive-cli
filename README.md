@@ -1,64 +1,59 @@
-# @hyperspace/hyperdrive
-A companion service for Hyperspace that provides FUSE/CLI access to Hyperdrives.
+# bitdrive-cli
+A companion service for Bitspace that provides FUSE/CLI access to Bitdrives.
 
-This service creates a "root drive" for you, which is a single, private Hyperdrive that's mounted at `~/Hyperdrive`. You can think of this root drive as a replacement for your normal home directory (where you might have Documents, Videos, and Pictures folders, for example).
+This service creates a "root drive" for you, which is a single, private Bitdrive that's mounted at `~/Bitdrive`. You can think of this root drive as a replacement for your normal home directory (where you might have Documents, Videos, and Pictures folders, for example).
 
-The CLI gives you commands for interacting with Hyperdrives, both inside and outside of FUSE. Here are some of the included commands:
-* The `mount` and `unmount` commands allow you to attach/detach other other Hyperdrives to/from your root drive.
-* The `seed` and `unseed` commands let you decide whether you'd like to advertise a drive on the Hyperswarm DHT.
-* The `import` and `export` commands are for users who don't want to use FUSE, but still want to move data in and out of Hyperdrives.
-
-## For Hyperdrive Daemon Users
-This module replaces the functionality of the [`hyperdrive-daemon`](https://github.com/hypercore-protocol/hyperdrive-daemon). If you've previously used that daemon, running Hyperspace for the first time will migrate your content in `~/.hyperdrive` to be compatible with this service.
-
-Also, @hyperspace/hyperdrive will only run in the foreground -- we switched to this model to keep things easy to use and debug. If you'd like to run it persistently (such that this service and Hyperspace auto-start on reboot), you can set this up using your system's process manager (like systemd).
+The CLI gives you commands for interacting with Bitdrives, both inside and outside of FUSE. Here are some of the included commands:
+* The `mount` and `unmount` commands allow you to attach/detach other other Bitdrives to/from your root drive.
+* The `seed` and `unseed` commands let you decide whether you'd like to advertise a drive on the Bitswarm DHT.
+* The `import` and `export` commands are for users who don't want to use FUSE, but still want to move data in and out of Bitdrives.
 
 ### Installation
-Before installing the Hyperdrive service, you'll want to first install [`hyperspace`](https://github.com/hyperspace-org/hyperspace). Once Hyperspace is installed, run:
+Before installing the Bitdrive service, you'll want to first install [`bitspace`](https://github.com/bitwebs/bitspace). Once Bitspace is installed, run:
 ```
-npm i @hyperspace/hyperdrive -g
+npm i bitdrive-cli -g
 ```
 
-After the NPM installation, you should have access to the `hyperdrive` CLI tool.
+After the NPM installation, you should have access to the `bitdrive` CLI tool.
 
 ### Getting Started
-In another terminal, spin up Hyperspace by running `hyperspace` (no other flags needed).
+In another terminal, spin up Bitspace by running `bitspace` (no other flags needed).
 
 If you're planning on using FUSE, you have to perform a one-time setup step to do the FUSE installation. This will prompt you for `sudo` access:
 ```
-$ hyperdrive fuse-setup
+$ bitdrive fuse-setup
 ```
 
-Once FUSE has been configured, you're ready to start the Hyperdrive service:
+Once FUSE has been configured, you're ready to start the Bitdrive service:
 ```
-$ hyperdrive start
+$ bitdrive start
 ```
 
 ### API
-`@hyperspace/hyperdrive` exposes an API for programmatically interacting with your root drive. To create a client:
+`bitdrive-cli` exposes an API for programmatically interacting with your root drive. To create a client:
 ```js
-const HyperdriveServiceClient = require('@hyperspace/hyperdrive/client')
-const client = new HyperdriveServiceClient()
+const BitdriveServiceClient = require('bitdrive-cli/client')
+const client = new BitdriveServiceClient()
 ```
 
-#### `const client = new HyperdriveServiceClient(opts = {})`
-Create a new client for interacting with the Hyperdrive service.
+#### `const client = new BitdriveServiceClient(opts = {})`
+Create a new client for interacting with the Bitdrive service.
 
-If you don't provide any options, options will be loaded from a configuration file inside of the `~/.hyperspace` directory and a Hyperspace client will be created automatically.
+If you don't provide any options, options will be loaded from a configuration file inside of the `~/.bitspace` directory and a Bitspace client will be created automatically.
 
 Options include:
 ```js
 {
   mnt: string, // The FUSE mountpoint
   key: Buffer, // Your root drive key.
-  client: HyperspaceClient // A hyperspace client.
+  client: BitspaceClient // A bitspace client.
 }
 ```
 
 #### `await client.mount(path, opts = {})`
-Mounts a Hyperdrive inside of your root drive. `path` must be contained within your root drive's mountpoint (typically `~/Hyperdrive`).
+Mounts a Bitdrive inside of your root drive. `path` must be contained within your root drive's mountpoint (typically `~/Bitdrive`).
 
-Options include all options to Hyperdrive's mount method, such as:
+Options include all options to Bitdrive's mount method, such as:
 ```js
 {
   key: Buffer, // The key of the drive you're mounting.
@@ -67,10 +62,10 @@ Options include all options to Hyperdrive's mount method, such as:
 ```
 
 #### `await client.unmount(path)`
-Unmount the drive mounted at `path`. `path` must be contained within your root drive's mountpoint (typically `~/Hyperdrive`).
+Unmount the drive mounted at `path`. `path` must be contained within your root drive's mountpoint (typically `~/Bitdrive`).
 
 #### `await client.seed(path, opts = {})`
-Start announcing a mounted drive on the Hyperswarm DHT.
+Start announcing a mounted drive on the Bitswarm DHT.
 
 Options include:
 ```js
@@ -80,7 +75,7 @@ Options include:
 ```
 
 #### `await client.unseed(path, opts = {})`
-Stop announcing a mounted drive on the Hyperswarm DHT.
+Stop announcing a mounted drive on the Bitswarm DHT.
 
 Options include:
 ```js
@@ -115,7 +110,7 @@ The stats take the form:
 }
 ```
 
-where `storage` has the same structure as that returned by [`Hyperdrive.stats`](https://github.com/hypercore-protocol/hyperdrive)
+where `storage` has the same structure as that returned by [`Bitdrive.stats`](https://github.com/bitwebs/bitdrive)
 and `network` has the form:
 ```
 {
@@ -123,9 +118,9 @@ and `network` has the form:
     metadata: {
       key,
       discoveryKey,
-      length: number, // The Hypercore's length,
-      byteLength: number // The Hypercore's byteLength
-      peers: [Peer] // An Array of Hypercore Peer objects.
+      length: number, // The Unichain's length,
+      byteLength: number // The Unichain's byteLength
+      peers: [Peer] // An Array of Unichain Peer objects.
     },
     content: {
       // Same as above
@@ -140,12 +135,12 @@ and `network` has the form:
 ```
 
 #### `const { progress, drive } = client.import(key, dir, opts = {})`
-Imports a Hyperdrive into Hyperspace.
+Imports a Bitdrive into Bitspace.
 
 If you're using FUSE, you probably don't need to explictly `import`/`export`, because you can replicate this functionality using the filesystem alone.
 
 `progress` is an instance of [`mirror-folder`](https://github.com/mafintosh/mirror-folder).
-`drive` is the Hyperdrive that you're importing into.
+`drive` is the Bitdrive that you're importing into.
 
 Options include:
 ```js
@@ -154,10 +149,10 @@ Options include:
 }
 ```
 
-_Note: This imported drive will not appear inside your root drive unless you explicitly mount it with `hyperdrive mount (mount path) (imported drive key)`_
+_Note: This imported drive will not appear inside your root drive unless you explicitly mount it with `bitdrive mount (mount path) (imported drive key)`_
 
 #### `const { progress, drive } = client.export(key, dir, opts = {})`
-Exports a Hyperdrive into a local directory.
+Exports a Bitdrive into a local directory.
 
 If you're using FUSE, you probably don't need to explictly `import`/`export`, because you can replicate this functionality using the filesystem alone.
 
@@ -167,32 +162,32 @@ Options include:
 ```
 
 ### CLI Commands
-The `hyperdrive` CLI tool includes a handful of subcommands that wrap the API methods described above. Running `hyperdrive help` will give more complete usage info:
+The `bitdrive` CLI tool includes a handful of subcommands that wrap the API methods described above. Running `bitdrive help` will give more complete usage info:
 ```
 $ ./bin/run/run help
-A Hyperspace service that for managing Hyperdrives over FUSE.
+A Bitspace service that for managing Bitdrives over FUSE.
 
 VERSION
-  @hyperspace/hyperdrive/1.0.0 linux-x64 node-v12.9.1
+  bitdrive-cli/1.0.0 linux-x64 node-v12.9.1
 
 USAGE
-  $ hyperdrive [COMMAND]
+  $ bitdrive [COMMAND]
 
 COMMANDS
   autocomplete   display autocomplete installation instructions
   create         Create a new drive mounted at the specified path
-  export         Export a Hyperdrive into a directory.
+  export         Export a Bitdrive into a directory.
   force-unmount  Forcibly unmount the root filesystem (useful if it was not cleanly unmounted).
   fuse-setup     Perform a one-time configuration step for FUSE.
-  help           display help for hyperdrive
-  import         Import a directory into a Hyperdrive.
+  help           display help for bitdrive
+  import         Import a directory into a Bitdrive.
   info           Display information about the drive mounted at the given mountpoint.
   mount          Mount a drive at the specified mountpoint.
-  seed           Seed a Hyperdrive on the network.
-  start          Start the Hyperdrive service.
+  seed           Seed a Bitdrive on the network.
+  start          Start the Bitdrive service.
   stats          Get the networking stats for the drive mounted at a path.
   unmount        Unmount a drive. The root drive will be unmounted if a mountpoint is not specified.
-  unseed         Stop seeding a Hyperdrive on the network.
+  unseed         Stop seeding a Bitdrive on the network.
 ```
 
 ### License

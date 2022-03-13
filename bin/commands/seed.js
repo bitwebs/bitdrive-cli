@@ -1,13 +1,13 @@
 const p = require('path').posix
 const ora = require('ora')
-const hypercoreCrypto = require('hypercore-crypto')
+const bitwebCrypto = require('@web4/bitweb-crypto')
 const { flags } = require('@oclif/command')
 
-const HyperdriveServiceCommand = require('../../lib/cli')
+const BitdriveServiceCommand = require('../../lib/cli')
 
-class SeedCommand extends HyperdriveServiceCommand {
+class SeedCommand extends BitdriveServiceCommand {
   static usage = 'seed [path]'
-  static description = 'Seed a Hyperdrive on the network.'
+  static description = 'Seed a Bitdrive on the network.'
   static args = [
     {
       name: 'path',
@@ -17,11 +17,11 @@ class SeedCommand extends HyperdriveServiceCommand {
     }
   ]
   static flags = {
-    key: HyperdriveServiceCommand.keyFlag({
+    key: BitdriveServiceCommand.keyFlag({
       description: 'The drive key to seed (will override the provided path)'
     }),
     root: flags.boolean({
-      description: 'Make your root drive (at ~/Hyperdrive) available to the network',
+      description: 'Make your root drive (at ~/Bitdrive) available to the network',
       default: false
     }),
     announce: flags.boolean({
@@ -53,7 +53,7 @@ class SeedCommand extends HyperdriveServiceCommand {
       remember: flags.remember
     }
 
-    const discoveryKey = flags.key ? hypercoreCrypto.discoveryKey(flags.key) : null
+    const discoveryKey = flags.key ? bitwebCrypto.discoveryKey(flags.key) : null
     try {
       if (args.path) await this.infoForPath(args.path, flags.root)
       await this.client.seed(args.path, {

@@ -2,9 +2,9 @@ const p = require('path')
 const ora = require('ora')
 const { flags } = require('@oclif/command')
 
-const HyperdriveServiceCommand = require('../../lib/cli')
+const BitdriveServiceCommand = require('../../lib/cli')
 
-class MountCommand extends HyperdriveServiceCommand {
+class MountCommand extends BitdriveServiceCommand {
   static usage = 'mount [path] [key]'
   static description = `Mount a drive at the specified mountpoint.`
   static args = [
@@ -13,7 +13,7 @@ class MountCommand extends HyperdriveServiceCommand {
       required: true,
       description: 'The path where the drive will be mounted (must be within the current root mountpoint).'
     },
-    HyperdriveServiceCommand.keyArg({
+    BitdriveServiceCommand.keyArg({
       description: 'The key of the drive that will be mounted (a new drive will be created if blank).'
     })
   ]
@@ -23,7 +23,7 @@ class MountCommand extends HyperdriveServiceCommand {
       required: false
     }),
     seed: flags.boolean({
-      description: 'Seed the new drive on the Hyperdrive network (false by default for mounts)',
+      description: 'Seed the new drive on the BitWeb network (false by default for mounts)',
       required: false,
       default: false
     })
@@ -39,10 +39,10 @@ class MountCommand extends HyperdriveServiceCommand {
         key: args.key ? args.key : null,
         version: flags.version,
       })
-      const hsClient = this.client.hyperspaceClient
+      const bsClient = this.client.bitspaceClient
 
       if (flags.seed) {
-        await hsClient.network.configure(drive.discoveryKey, { announce: true, lookup: true, remember: true}) 
+        await bsClient.network.configure(drive.discoveryKey, { announce: true, lookup: true, remember: true}) 
       }
       await drive.close()
 
@@ -56,7 +56,7 @@ class MountCommand extends HyperdriveServiceCommand {
       console.log(`  Seeding: ${seeding}`)
       if (!seeding) {
         console.log()
-        console.log(`This drive is private by default. To publish it, run \`hyperdrive seed ${args.path}\``)
+        console.log(`This drive is private by default. To publish it, run \`bitdrive seed ${args.path}\``)
       }
     } catch (err) {
       spinner.fail('Could not mount the drive:')

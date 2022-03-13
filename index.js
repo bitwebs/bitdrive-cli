@@ -2,31 +2,31 @@ const os = require('os')
 const p = require('path')
 
 const { NanoresourcePromise: Nanoresource } = require('nanoresource-promise/emitter')
-const HyperspaceClient = require('hyperspace/client')
-const hyperdrive = require('hyperdrive')
-const applyHeuristics = require('hyperdrive-network-heuristics')
+const BitspaceClient = require('bitspace/client')
+const bitdrive = require('@web4/bitdrive')
+const applyHeuristics = require('@web4/bitdrive-network-heuristics')
 const maybe = require('call-me-maybe')
 const pino = require('pino')
 
 const { loadConfig, saveConfig } = require('./lib/config')
 const NetworkHandlers = require('./lib/network')
 
-const DEFAULT_MNT = p.join(os.homedir(), 'Hyperdrive')
+const DEFAULT_MNT = p.join(os.homedir(), 'Bitdrive')
 
-module.exports = class HyperdriveService extends Nanoresource {
+module.exports = class BitdriveService extends Nanoresource {
   constructor (opts = {}) {
     super()
     this.mnt = opts.mnt || DEFAULT_MNT
     this.key = opts.key
     this.log = opts.log || pino({
-      name: 'hyperspace-fuse',
+      name: 'bitspace-fuse',
       level: opts.logLevel || 'info'
     }, pino.destination(2))
 
     this.remember = (opts.remember === undefined) ? true : !!opts.remember
     this.disableFuse = !!opts.disableFuse
 
-    this._client = opts.client || new HyperspaceClient(opts)
+    this._client = opts.client || new BitspaceClient(opts)
     this._store = null
     this._rootDrive = null
   }
@@ -49,16 +49,16 @@ module.exports = class HyperdriveService extends Nanoresource {
 
   _fuseEnabled () {
     if (this.disableFuse) return false
-    var hyperfuse = null
+    var bitfuse = null
     try {
-      hyperfuse = require('hyperdrive-fuse')
+      bitfuse = require('bitdrive-fuse')
     } catch (err) {
       notAvailable()
       return false
     }
 
     return new Promise(resolve => {
-      hyperfuse.isConfigured((err, configured) => {
+      bitfuse.isConfigured((err, configured) => {
         if (err) {
           notAvailable()
           return resolve(false)
@@ -72,7 +72,7 @@ module.exports = class HyperdriveService extends Nanoresource {
     })
 
     function notConfigured () {
-      console.warn('FUSE is not configured. Run `hyperdrive fuse-setup`.')
+      console.warn('FUSE is not configured. Run `bitdrive fuse-setup`.')
     }
     function notAvailable () {
       console.warn('FUSE is not available on your platform.')
@@ -84,7 +84,7 @@ module.exports = class HyperdriveService extends Nanoresource {
       cb = opts
       opts = null
     }
-    var drive = hyperdrive(this._store, opts && opts.key, {
+    var drive = bitdrive(this._store, opts && opts.key, {
       ...opts,
       extension: false
     }).promises
@@ -97,10 +97,10 @@ module.exports = class HyperdriveService extends Nanoresource {
 
   async _mount () {
     await this._unmount()
-    const { HyperdriveFuse } = require('hyperdrive-fuse')
+    const { BitdriveFuse } = require('bitdrive-fuse')
     const drive = await this._createDrive({ key: this.key })
     const fuseLogger = this.log.child({ component: 'fuse' })
-    const fuse = new HyperdriveFuse(drive.drive, this.mnt, {
+    const fuse = new BitdriveFuse(drive.drive, this.mnt, {
       force: true,
       displayFolder: true,
       log: fuseLogger.trace.bind(this.log)
