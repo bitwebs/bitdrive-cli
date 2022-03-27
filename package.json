@@ -1,6 +1,6 @@
 {
   "name": "bitdrive-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Bitspace service that for managing Bitdrives over FUSE.",
   "main": "index.js",
   "bin": {
@@ -20,13 +20,13 @@
     "@web4/bitdrive": "^1.0.0",
     "@web4/bitdrive-network-heuristics": "^1.0.0",
     "@web4/bitdrive-schemas": "^1.0.0",
-    "@web4/bitspace": "^1.0.0",
     "@web4/bitweb-crypto": "^2.0.0",
     "@oclif/command": "^1.6.1",
     "@oclif/config": "^1.15.1",
     "@oclif/errors": "^1.2.2",
     "@oclif/plugin-autocomplete": "^0.2.0",
     "@oclif/plugin-help": "^3.1.0",
+    "bitspace": "^1.0.0",
     "call-me-maybe": "^1.0.1",
     "cli-progress": "^3.8.2",
     "codecs": "^2.1.0",
