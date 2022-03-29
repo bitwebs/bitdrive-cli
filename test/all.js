@@ -2,7 +2,7 @@ const p = require('path')
 const fs = require('fs').promises
 
 const test = require('tape')
-const bitwebCrypto = require('@web4/bitweb-crypto')
+const bitwebCrypto = require('@web4/crypto')
 const { create, createOne } = require('./helpers/create')
 
 test('can start/stop the fuse service', async t => {

@@ -33,7 +33,7 @@ module.exports = class BitdriveService extends Nanoresource {
 
   async _open () {
     await this._client.ready()
-    this._store = this._client.corestore()
+    this._store = this._client.chainstore()
     if (this.remember) {
       const config = await loadConfig()
       if (!this.key && config.rootDriveKey) this.key = Buffer.from(config.rootDriveKey, 'hex')
